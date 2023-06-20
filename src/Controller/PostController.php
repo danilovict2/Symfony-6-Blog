@@ -33,8 +33,10 @@ class PostController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('post/create.html.twig',[
+        return $this->render(
+            'post/create.html.twig', [
             'post_form' => $form
-        ]);
+            ]
+        );
     }
 }
