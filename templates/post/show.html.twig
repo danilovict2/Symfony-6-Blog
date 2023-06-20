@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ parent() }}- View Post
+{% endblock %}
+
+{% block body %}
+
+	<div class="container">
+		{% for message in app.flashes('sucess') %}
+			<div class="alert alert-success" role="alert">
+				<strong>Sucess:
+				</strong>
+				{{ message }}
+			</div>
+		{% endfor %}
+
+		<div class="row">
+			<div class="col-md-8">
+				<h1>{{ post.title }}</h1>
+
+				<p class="lead">{{ post.body }}</p>
+			</div>
+
+			<div class="col-md-4">
+				<div class="card" style="background-color: lightgray;">
+					<div class="card-body">
+						<dl class="list-group">
+							<dt>Created:</dt>
+							<dd>{{ post.createdAt|ago }}</dd>
+						</dl>
+
+						<dl>
+							<dt>Last Updated:</dt>
+							<dd>{{ post.updatedAt|ago }}</dd>
+						</dl>
+						<hr>
+						<div class="row">
+							<div class="col-6">
+								<a href="#" class="btn btn-primary btn-block">Edit</a>
+							</div>
+							<div class="col-6">
+								<a href="#" class="btn btn-danger btn-block">Delete</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

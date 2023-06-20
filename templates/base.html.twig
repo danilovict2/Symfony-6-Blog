@@ -15,7 +15,7 @@
 	<body>
 		{% set route_name = app.request.attributes.get('_route') %}
 		<nav class="navbar navbar-expand-lg navbar-light bg-light py-3" style="margin-left: 10px;">
-			<a class="navbar-brand" href="#">Symfony Blog</a>
+			<a class="navbar-brand" href="{{ path('homepage') }}">Symfony Blog</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -46,6 +46,13 @@
 
 
 		{% block body %}{% endblock %}
+
+		<hr>
+		<div class="container d-flex justify-content-center align-items-center">
+			<p>Copyright danilovict2 - All rights reseved</p>
+		</div>
+
+
 		{% block javascripts %}
 			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
