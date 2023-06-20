@@ -17,8 +17,7 @@ class PostType extends AbstractType
         $builder
             ->add('title')
             ->add('body', TextareaType::class)
-            ->add('submit', SubmitType::class)
-        ;
+            ->add('submit', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

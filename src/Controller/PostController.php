@@ -15,11 +15,9 @@ class PostController extends AbstractController
     #[Route('/post/{id<\d+>}', name: 'post_show')]
     public function show(Post $post): Response
     {
-        return $this->render(
-            'post/show.html.twig', [
-            'post' => $post
-            ]
-        );
+        return $this->render('post/show.html.twig', [
+            'post' => $post            
+        ]);
     }
 
     #[Route('/post/create', name: 'post_create')]
@@ -39,10 +37,8 @@ class PostController extends AbstractController
             return $this->redirectToRoute('post_show', ['id' => $post->getId()]);
         }
 
-        return $this->render(
-            'post/create.html.twig', [
+        return $this->render('post/create.html.twig', [
             'post_form' => $form
-            ]
-        );
+        ]);
     }
 }
