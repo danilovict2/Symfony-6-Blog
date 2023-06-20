@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ parent() }} - All Posts
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-10">
+				<h1>All Posts</h1>
+			</div>
+
+			<div class="col-md-2">
+				<a href="{{ path('post_create') }}" class="btn btn-lg btn-block btn-primary btn-h1-spacing">Create New Post</a>
+			</div>
+			<hr>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<table class="table">
+					<thead>
+						<th>#</th>
+						<th>Title</th>
+						<th>Body</th>
+						<th>Created</th>
+						<th></th>
+					</thead>
+
+					<tbody>
+						{% for post in posts %}
+							<tr>
+								<th>{{ post.id }}</th>
+								<td>{{ post.title }}</td>
+								<td>{{ post.body }}</td>
+								<td>{{ post.createdAt|ago }}</td>
+								<td>
+									<a href="{{ path('post_show', {'id' : post.id}) }}" class="btn btn-default">View</a>
+									<a href="#" class="btn btn-default">Edit</a>
+								</td>
+							</tr>
+
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

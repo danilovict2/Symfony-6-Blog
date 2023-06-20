@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Form\PostType;
+use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +13,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PostController extends AbstractController
 {
+    #[Route('/posts', name: 'post_index')]
+    public function index(PostRepository $postRepository): Response
+    {
+        $posts = $postRepository->findAll();
+        return $this->render('post/index.html.twig', [
+            'posts' => $posts,
+        ]);
+    }
+
     #[Route('/post/{id<\d+>}', name: 'post_show')]
     public function show(Post $post): Response
     {
