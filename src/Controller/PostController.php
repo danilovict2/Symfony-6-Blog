@@ -14,11 +14,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class PostController extends AbstractController
 {
     #[Route('/posts', name: 'post_index')]
-    public function index(PostRepository $postRepository): Response
+    public function index(PostRepository $postRepository, Request $request): Response
     {
-        $posts = $postRepository->findAll();
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $postRepository->getPostPaginator($offset);
+
         return $this->render('post/index.html.twig', [
-            'posts' => $posts,
+            'posts' => $paginator,
+            'previous' => $offset - PostRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + PostRepository::PAGINATOR_PER_PAGE),
         ]);
     }
 

@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{{ parent() }} - All Posts
+	{{ parent() }}
+	- All Posts
 {% endblock %}
 
 {% block body %}
@@ -44,6 +45,15 @@
 						{% endfor %}
 					</tbody>
 				</table>
+
+				<div class="text-center p-2">
+					{% if previous >= 0 %}
+						<a href="{{ path('post_index', { offset: previous }) }}">Previous</a>
+					{% endif %}
+					{% if next < posts|length %}
+						<a href="{{ path('post_index', { offset: next }) }}">Next</a>
+					{% endif %}
+				</div>
 			</div>
 		</div>
 	</div>
