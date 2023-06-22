@@ -17,6 +17,7 @@ class PostType extends AbstractType
         $builder
             ->add('title')
             ->add('body', TextareaType::class)
+            ->add('slug')
             ->add('submit', SubmitType::class)
         ;
     }

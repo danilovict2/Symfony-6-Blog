@@ -13,24 +13,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PostController extends AbstractController
 {
+    public function __construct(private PostRepository $postRepository)
+    {
+    }
+
     #[Route('/posts', name: 'post_index')]
-    public function index(PostRepository $postRepository, Request $request): Response
+    public function index(Request $request): Response
     {
         $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $postRepository->getPostPaginator($offset);
+        $paginator = $this->postRepository->getPostPaginator($offset);
 
         return $this->render('post/index.html.twig', [
             'posts' => $paginator,
             'previous' => $offset - PostRepository::PAGINATOR_PER_PAGE,
             'next' => min(count($paginator), $offset + PostRepository::PAGINATOR_PER_PAGE),
-        ]);
-    }
-
-    #[Route('/post/{id<\d+>}', name: 'post_show')]
-    public function show(Post $post): Response
-    {
-        return $this->render('post/show.html.twig', [
-            'post' => $post
         ]);
     }
 
@@ -48,7 +44,7 @@ class PostController extends AbstractController
 
             $this->addFlash('sucess', 'The blog post was successfully saved!');
 
-            return $this->redirectToRoute('post_show', ['id' => $post->getId()]);
+            return $this->redirectToRoute('post_show', ['slug' => $post->getSlug()]);
         }
 
         return $this->render('post/create.html.twig', [
@@ -56,9 +52,19 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/post/{id<\d+>}/edit', name: 'post_edit')]
-    public function edit(Post $post, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/post/{slug}', name: 'post_show')]
+    public function show(string $slug): Response
     {
+        $post = $this->postRepository->findOneBy(['slug' => $slug]);
+        return $this->render('post/show.html.twig', [
+            'post' => $post
+        ]);
+    }
+
+    #[Route('/post/{slug}/edit', name: 'post_edit')]
+    public function edit(string $slug, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $post = $this->postRepository->findOneBy(['slug' => $slug]);
         $form = $this->createForm(PostType::class, $post);
 
         $form->handleRequest($request);
@@ -69,7 +75,7 @@ class PostController extends AbstractController
 
             $this->addFlash('sucess', 'The blog post was successfully updated!');
 
-            return $this->redirectToRoute('post_show', ['id' => $post->getId()]);
+            return $this->redirectToRoute('post_show', ['slug' => $post->getSlug()]);
         }
 
         return $this->render('post/edit.html.twig', [
@@ -78,10 +84,11 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/post/{id<\d+>}/delete', name: 'post_delete')]
-    public function delete(Post $post, PostRepository $postRepository): Response
+    #[Route('/post/{slug}/delete', name: 'post_delete')]
+    public function delete(string $slug): Response
     {
-        $postRepository->remove($post, true);
+        $post = $this->postRepository->findOneBy(['slug' => $slug]);
+        $this->postRepository->remove($post, true);
         return $this->redirectToRoute('homepage');
     }
 }
