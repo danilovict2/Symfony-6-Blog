@@ -34,7 +34,7 @@
 							<tr>
 								<th>{{ post.id }}</th>
 								<td>{{ post.title }}</td>
-								<td>{{ post.body }}</td>
+								<td>{{ post.body|u.truncate(50) }}{% if post.body|length > 50 %}...{% endif %}</td>
 								<td>{{ post.createdAt|ago }}</td>
 								<td>
 									<a href="{{ path('post_show', {'id' : post.id}) }}" class="btn btn-default">View</a>
