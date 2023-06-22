@@ -26,7 +26,7 @@ class PostController extends AbstractController
     public function show(Post $post): Response
     {
         return $this->render('post/show.html.twig', [
-            'post' => $post            
+            'post' => $post
         ]);
     }
 
@@ -49,6 +49,28 @@ class PostController extends AbstractController
 
         return $this->render('post/create.html.twig', [
             'post_form' => $form
+        ]);
+    }
+
+    #[Route('/post/{id<\d+>}/edit', name: 'post_edit')]
+    public function edit(Post $post, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(PostType::class, $post);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($post);
+            $entityManager->flush();
+
+            $this->addFlash('sucess', 'The blog post was successfully updated!');
+
+            return $this->redirectToRoute('post_show', ['id' => $post->getId()]);
+        }
+
+        return $this->render('post/edit.html.twig', [
+            'post_form' => $form,
+            'post' => $post
         ]);
     }
 }
