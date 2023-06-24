@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block body %}
+	{% if form_errors(post_form) %}
+		<div class="alert alert-danger" role="alert">
+			<strong>Errors:</strong>
+			{{ form_errors(post_form) }}
+		</div>
+	{% endif %}
 	<div class="container d-flex flex-column">
 		<div class="row">
 			<div class="col-md-8 col-md-offset-2">

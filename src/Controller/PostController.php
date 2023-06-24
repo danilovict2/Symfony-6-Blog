@@ -55,7 +55,7 @@ class PostController extends AbstractController
     #[Route('/post/{slug}', name: 'post_show')]
     public function show(string $slug): Response
     {
-        $post = $this->postRepository->findOneBy(['slug' => $slug]);
+        $post = $this->postRepository->findOneBySlug($slug);
         return $this->render('post/show.html.twig', [
             'post' => $post
         ]);
@@ -64,7 +64,7 @@ class PostController extends AbstractController
     #[Route('/post/{slug}/edit', name: 'post_edit')]
     public function edit(string $slug, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $post = $this->postRepository->findOneBy(['slug' => $slug]);
+        $post = $this->postRepository->findOneBySlug($slug);
         $form = $this->createForm(PostType::class, $post);
 
         $form->handleRequest($request);
@@ -87,7 +87,7 @@ class PostController extends AbstractController
     #[Route('/post/{slug}/delete', name: 'post_delete')]
     public function delete(string $slug): Response
     {
-        $post = $this->postRepository->findOneBy(['slug' => $slug]);
+        $post = $this->postRepository->findOneBySlug($slug);
         $this->postRepository->remove($post, true);
         return $this->redirectToRoute('homepage');
     }
