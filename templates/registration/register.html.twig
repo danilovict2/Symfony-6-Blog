@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} - Register
+{% endblock %}
+
+{% block body %}
+    {% if form_errors(registrationForm) %}
+		<div class="alert alert-danger" role="alert">
+			<strong>Errors:</strong>
+			{{ form_errors(registrationForm) }}
+		</div>
+	{% endif %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<h1>Register</h1>
+
+				{{ form_start(registrationForm) }}
+                <div class="form-group mb-3">
+					{{ form_label(registrationForm.username) }}
+					{{ form_widget(registrationForm.username, {'attr' : {'class' : 'form-control'}}) }}
+				</div>
+                <div class="form-group mb-3">
+					{{ form_label(registrationForm.email) }}
+					{{ form_widget(registrationForm.email, {'attr' : {'class' : 'form-control'}}) }}
+				</div>
+                <div class="form-group mb-3">
+					{{ form_label(registrationForm.plainPassword) }}
+					{{ form_widget(registrationForm.plainPassword, {'attr' : {'class' : 'form-control'}}) }}
+				</div>
+				<button type="submit" class="btn btn-success">Register</button>
+				{{ form_end(registrationForm) }}
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

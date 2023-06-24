@@ -32,7 +32,7 @@ class PostRepository extends ServiceEntityRepository
             ->setFirstResult($offset)
             ->getQuery()
         ;
-        
+
         return new Paginator($query);
     }
 

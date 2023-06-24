@@ -48,7 +48,7 @@ class PostController extends AbstractController
         }
 
         return $this->render('post/create.html.twig', [
-            'post_form' => $form
+            'post_form' => $form->createView()
         ]);
     }
 
