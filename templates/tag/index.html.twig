@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ parent() }} - Tags
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		{% for message in app.flashes('sucess') %}
+			<div class="alert alert-success" role="alert">
+				<strong>Sucess:
+				</strong>
+				{{ message }}
+			</div>
+		{% endfor %}
+		{% if form_errors(tag_form) %}
+			<div class="alert alert-danger" role="alert">
+				<strong>Errors:</strong>
+				{{ form_errors(tag_form) }}
+			</div>
+		{% endif %}
+		<div class="row">
+			<div class="col-md-8">
+				<h1>Tags</h1>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Name</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{% for tag in tags %}
+							<tr>
+								<th>{{ tag.id }}</th>
+								<td>{{ tag.name }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-4">
+				<div class="card" style="background-color: lightgray;">
+					<div class="card-body">
+						{{ form_start(tag_form) }}
+						<h2>New Tag</h2>
+						<div class="form-group mb-3">
+							{{ form_label(tag_form.name) }}
+							{{ form_widget(tag_form.name, {'attr' : {'class' : 'form-control'}}) }}
+						</div>
+
+						{{ form_row(tag_form.submit, {'attr' : {'class' : 'btn btn-success'}}) }}
+						{{ form_end(tag_form) }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
