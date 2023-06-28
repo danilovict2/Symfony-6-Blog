@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{{ parent() }} - Categories
+	{{ parent() }} - Your Categories
 {% endblock %}
 
 {% block body %}
@@ -21,7 +21,7 @@
 		{% endif %}
 		<div class="row">
 			<div class="col-md-8">
-				<h1>Categories</h1>
+				<h1>Your Categories</h1>
 				<table class="table">
 					<thead>
 						<tr>
@@ -40,21 +40,23 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="col-md-4">
-				<div class="card" style="background-color: lightgray;">
-					<div class="card-body">
-						{{ form_start(category_form) }}
-						<h2>New Category</h2>
-						<div class="form-group mb-3">
-							{{ form_label(category_form.name) }}
-							{{ form_widget(category_form.name, {'attr' : {'class' : 'form-control'}}) }}
-						</div>
+			{% if is_granted("ROLE_CREATOR") %}
+				<div class="col-md-4">
+					<div class="card" style="background-color: lightgray;">
+						<div class="card-body">
+							{{ form_start(category_form) }}
+							<h2>New Category</h2>
+							<div class="form-group mb-3">
+								{{ form_label(category_form.name) }}
+								{{ form_widget(category_form.name, {'attr' : {'class' : 'form-control'}}) }}
+							</div>
 
-						{{ form_row(category_form.submit, {'attr' : {'class' : 'btn btn-success'}}) }}
-						{{ form_end(category_form) }}
+							{{ form_row(category_form.submit, {'attr' : {'class' : 'btn btn-success'}}) }}
+							{{ form_end(category_form) }}
+						</div>
 					</div>
 				</div>
-			</div>
+			{% endif %}
 		</div>
 	</div>
 {% endblock %}

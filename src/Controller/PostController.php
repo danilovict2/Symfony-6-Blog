@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted("ROLE_USER")]
+
 class PostController extends AbstractController
 {
     public function __construct(private PostRepository $postRepository)
@@ -20,6 +20,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/posts', name: 'post_index')]
+    #[IsGranted("ROLE_CREATOR")]
     public function index(Request $request): Response
     {
         $offset = max(0, $request->query->getInt('offset', 0));
@@ -33,6 +34,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/create', name: 'post_create')]
+    #[IsGranted("ROLE_CREATOR")]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $post = new Post();
@@ -64,6 +66,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/{slug}/edit', name: 'post_edit')]
+    #[IsGranted("ROLE_CREATOR")]
     public function edit(string $slug, Request $request, EntityManagerInterface $entityManager): Response
     {
         $post = $this->postRepository->findOneBySlug($slug);
@@ -86,7 +89,8 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/post/{slug}/delete', name: 'post_delete')]
+    #[Route('/post/{slug}/delete', name: 'post_delete', methods: ["POST"])]
+    #[IsGranted("ROLE_CREATOR")]
     public function delete(string $slug): Response
     {
         $post = $this->postRepository->findOneBySlug($slug);

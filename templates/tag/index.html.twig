@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{{ parent() }} - Tags
+	{{ parent() }} - Your Tags
 {% endblock %}
 
 {% block body %}
@@ -21,7 +21,7 @@
 		{% endif %}
 		<div class="row">
 			<div class="col-md-8">
-				<h1>Tags</h1>
+				<h1>Your Tags</h1>
 				<table class="table">
 					<thead>
 						<tr>
@@ -40,21 +40,24 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="col-md-4">
-				<div class="card" style="background-color: lightgray;">
-					<div class="card-body">
-						{{ form_start(tag_form) }}
-						<h2>New Tag</h2>
-						<div class="form-group mb-3">
-							{{ form_label(tag_form.name) }}
-							{{ form_widget(tag_form.name, {'attr' : {'class' : 'form-control'}}) }}
-						</div>
+			{% if is_granted("ROLE_CREATOR") %}
+				<div class="col-md-4">
+					<div class="card" style="background-color: lightgray;">
+						<div class="card-body">
+							{{ form_start(tag_form) }}
+							<h2>New Tag</h2>
+							<div class="form-group mb-3">
+								{{ form_label(tag_form.name) }}
+								{{ form_widget(tag_form.name, {'attr' : {'class' : 'form-control'}}) }}
+							</div>
 
-						{{ form_row(tag_form.submit, {'attr' : {'class' : 'btn btn-success'}}) }}
-						{{ form_end(tag_form) }}
+							{{ form_row(tag_form.submit, {'attr' : {'class' : 'btn btn-success'}}) }}
+							{{ form_end(tag_form) }}
+						</div>
 					</div>
 				</div>
-			</div>
+			{% endif %}
+
 		</div>
 	</div>
 {% endblock %}

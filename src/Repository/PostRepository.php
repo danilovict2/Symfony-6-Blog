@@ -27,7 +27,7 @@ class PostRepository extends ServiceEntityRepository
     public function getPostPaginator(int $offset): Paginator
     {
         $query = $this->createQueryBuilder('c')
-            ->orderBy('c.created_at', 'ASC')
+            ->orderBy('c.created_at', 'DESC')
             ->setMaxResults(self::PAGINATOR_PER_PAGE)
             ->setFirstResult($offset)
             ->getQuery()
