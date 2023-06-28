@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ parent() }} - Categories
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		{% for message in app.flashes('sucess') %}
+			<div class="alert alert-success" role="alert">
+				<strong>Sucess:
+				</strong>
+				{{ message }}
+			</div>
+		{% endfor %}
+		{% if form_errors(category_form) %}
+			<div class="alert alert-danger" role="alert">
+				<strong>Errors:</strong>
+				{{ form_errors(category_form) }}
+			</div>
+		{% endif %}
+		<div class="row">
+			<div class="col-md-8">
+				<h1>Categories</h1>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Name</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{% for category in categories %}
+							<tr>
+								<th>{{ category.id }}</th>
+								<td>{{ category.name }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-4">
+				<div class="card" style="background-color: lightgray;">
+					<div class="card-body">
+						{{ form_start(category_form) }}
+						<h2>New Category</h2>
+						<div class="form-group mb-3">
+							{{ form_label(category_form.name) }}
+							{{ form_widget(category_form.name, {'attr' : {'class' : 'form-control'}}) }}
+						</div>
+
+						{{ form_row(category_form.submit, {'attr' : {'class' : 'btn btn-success'}}) }}
+						{{ form_end(category_form) }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
