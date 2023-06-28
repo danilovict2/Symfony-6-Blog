@@ -20,7 +20,7 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('username', null, [
                 'error_bubbling' => true,
-            ])    
+            ])
             ->add('email', EmailType::class, [
                 'error_bubbling' => true,
             ])

@@ -20,14 +20,17 @@
 				<h1>{{ post.title }}</h1>
 
 				<p class="lead">{{ post.body }}</p>
-				<hr>
-				<p>Posted In: {{ post.category }}</p>
 			</div>
 
 			<div class="col-md-4">
 				<div class="card" style="background-color: lightgray;">
 					<div class="card-body">
-						<dl class="list-group">
+						<dl>
+							<dt>Category:</dt>
+							<dd>{{ post.category }}</dd>
+						</dl>
+
+						<dl>
 							<dt>Created:</dt>
 							<dd>{{ post.createdAt|ago }}</dd>
 						</dl>
