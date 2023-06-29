@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{{ parent() }} - Edit Post
+	{{ parent() }}
+	- Edit Post
 {% endblock %}
 
 {% block body %}
@@ -29,6 +30,11 @@
 				<div class="form-group mb-3">
 					{{ form_label(post_form.category) }}
 					{{ form_widget(post_form.category, {'attr' : {'class' : 'form-select'}}) }}
+				</div>
+
+				<div class="form-group mb-3">
+					{{ form_label(post_form.tags) }}
+					{{ form_widget(post_form.tags, {'attr' : {'class' : 'form-control select2-multi'}}) }}
 				</div>
 
 				<div class="form-group mb-3">
@@ -64,5 +70,10 @@
 			{{ form_end(post_form) }}
 		</div>
 	</div>
+{% endblock %}
 
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('js/select2.js') }}"></script>
 {% endblock %}

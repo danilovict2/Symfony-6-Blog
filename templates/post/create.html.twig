@@ -33,6 +33,11 @@
 				</div>
 
 				<div class="form-group mb-3">
+					{{ form_label(post_form.tags) }}
+					{{ form_widget(post_form.tags, {'attr' : {'class' : 'form-control select2-multi'}}) }}
+				</div>
+
+				<div class="form-group mb-3">
 					{{ form_label(post_form.body) }}
 					{{ form_widget(post_form.body, {'attr' : {'class' : 'form-control form-control-lg', 'rows': 7}}) }}
 				</div>
@@ -44,5 +49,9 @@
 			</div>
 		</div>
 	</div>
+{% endblock %}
 
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('js/select2.js') }}"></script>
 {% endblock %}

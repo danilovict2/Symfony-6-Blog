@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\Category;
 use App\Entity\Post;
-use Doctrine\DBAL\Types\TextType;
+use App\Entity\Tag;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -25,8 +25,13 @@ class PostType extends AbstractType
             ])
             ->add('slug', null, [
                 'error_bubbling' => true,
-            ])->add('category', EntityType::class, [
+            ])
+            ->add('category', EntityType::class, [
                 'class' => Category::class,
+            ])
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'multiple' => true
             ])
             ->add('submit', SubmitType::class)
         ;
@@ -34,10 +39,8 @@ class PostType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(
-            [
+        $resolver->setDefaults([
             'data_class' => Post::class,
-            ]
-        );
+        ]);
     }
 }

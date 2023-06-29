@@ -5,13 +5,12 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-
 
 class PostController extends AbstractController
 {
@@ -35,24 +34,50 @@ class PostController extends AbstractController
 
     #[Route('/post/create', name: 'post_create')]
     #[IsGranted("ROLE_CREATOR")]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request): Response
     {
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
+        $response = $this->handlePostForm($post, $request, 'The blog post was successfully saved!', $form);
 
+        return $response ?? $this->render('post/create.html.twig', [
+            'post_form' => $form->createView(),
+        ]);
+    }
+
+    private function handlePostForm(
+        Post $post,
+        Request $request,
+        string $flash,
+        Form $form
+    ): ?Response {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($post);
-            $entityManager->flush();
-
-            $this->addFlash('sucess', 'The blog post was successfully saved!');
+            foreach ($form->get('tags')->getData() as $tag) {
+                $post->addTag($tag);
+            }
+            
+            $this->postRepository->save($post, true);
+            $this->addFlash('sucess', $flash);
 
             return $this->redirectToRoute('post_show', ['slug' => $post->getSlug()]);
         }
 
-        return $this->render('post/create.html.twig', [
-            'post_form' => $form->createView()
+        return null;
+    }
+
+    #[Route('/post/{slug}/edit', name: 'post_edit')]
+    #[IsGranted("ROLE_CREATOR")]
+    public function edit(string $slug, Request $request): Response
+    {
+        $post = $this->postRepository->findOneBySlug($slug);
+        $form = $this->createForm(PostType::class, $post);
+        $response = $this->handlePostForm($post, $request, 'The blog post was successfully updated!', $form);
+
+        return $response ?? $this->render('post/edit.html.twig', [
+            'post_form' => $form->createView(),
+            'post' => $post
         ]);
     }
 
@@ -61,30 +86,6 @@ class PostController extends AbstractController
     {
         $post = $this->postRepository->findOneBySlug($slug);
         return $this->render('post/show.html.twig', [
-            'post' => $post
-        ]);
-    }
-
-    #[Route('/post/{slug}/edit', name: 'post_edit')]
-    #[IsGranted("ROLE_CREATOR")]
-    public function edit(string $slug, Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $post = $this->postRepository->findOneBySlug($slug);
-        $form = $this->createForm(PostType::class, $post);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($post);
-            $entityManager->flush();
-
-            $this->addFlash('sucess', 'The blog post was successfully updated!');
-
-            return $this->redirectToRoute('post_show', ['slug' => $post->getSlug()]);
-        }
-
-        return $this->render('post/edit.html.twig', [
-            'post_form' => $form,
             'post' => $post
         ]);
     }
