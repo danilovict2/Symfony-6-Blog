@@ -56,8 +56,9 @@ class PostController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             foreach ($form->get('tags')->getData() as $tag) {
                 $post->addTag($tag);
+                $tag->addPost($post);
             }
-            
+
             $this->postRepository->save($post, true);
             $this->addFlash('sucess', $flash);
 

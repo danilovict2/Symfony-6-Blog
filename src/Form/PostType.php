@@ -31,7 +31,8 @@ class PostType extends AbstractType
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
-                'multiple' => true
+                'multiple' => true,
+                'required' => false
             ])
             ->add('submit', SubmitType::class)
         ;
