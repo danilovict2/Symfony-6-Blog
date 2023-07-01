@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Repository\PostRepository;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PagesController extends AbstractController
@@ -28,5 +32,22 @@ class PagesController extends AbstractController
     public function contact(): Response
     {
         return $this->render('pages/contact.html.twig');
+    }
+
+    #[Route('/contact/email/send', name: 'contact_email_send', methods: ['POST'])]
+    public function sendContactEmail(Request $request, MailerInterface $mailer, #[Autowire('%admin_email%')] string $adminEmail): Response
+    {
+        $email = (new TemplatedEmail())
+            ->from($request->request->get('email'))
+            ->to($adminEmail)
+            ->subject($request->request->get('subject'))
+            ->htmlTemplate('email/contact.html.twig')
+            ->context([
+                'message' => $request->request->get('message'),
+                'sender_email' => $request->request->get('email')
+            ])
+        ;
+        $mailer->send($email);
+        return $this->redirectToRoute('homepage');
     }
 }
