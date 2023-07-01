@@ -14,24 +14,63 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted("ROLE_USER")]
 class TagController extends AbstractController
 {
-    #[Route('/tags', name: 'tag_index')]
-    public function index(TagRepository $tagRepository, Request $request): Response
+    public function __construct(private TagRepository $tagRepository)
     {
-        $category = new Tag();
-        $form = $this->createForm(TagType::class, $category);
+    }
+
+    #[Route('/tags', name: 'tag_index')]
+    public function index(Request $request): Response
+    {
+        $tag = new Tag();
+        $form = $this->createForm(TagType::class, $tag);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $tagRepository->save($category, true);
-            $this->addFlash('sucess', 'New Category has been created!');
+            $this->tagRepository->save($tag, true);
+            $this->addFlash('sucess', 'New Tag has been created!');
 
             return $this->redirectToRoute('tag_index');
         }
 
-        $tags = $tagRepository->findAll();
+        $tags = $this->tagRepository->findAll();
         return $this->render('tag/index.html.twig', [
             'tags' => $tags,
             'tag_form' => $form->createView()
         ]);
+    }
+
+    #[Route('/tag/{name}', name: 'tag_show')]
+    public function show(string $name): Response
+    {
+        $tag = $this->tagRepository->findOneByName($name);
+        return $this->render('tag/show.html.twig', [
+            'tag' => $tag
+        ]);
+    }
+
+    #[Route('/tag/{id}/edit', name: 'tag_edit')]
+    public function edit(Tag $tag, Request $request): Response
+    {
+        $form = $this->createForm(TagType::class, $tag);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->tagRepository->save($tag, true);
+            $this->addFlash('sucess', 'Tag was successfully updated!');
+
+            return $this->redirectToRoute('tag_show', ['name' => $tag->getName()]);
+        }
+
+        return $this->render('tag/edit.html.twig', [
+            'tag_form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/tag/{id}/delete', name: 'tag_delete', methods: ['POST'])]
+    public function delete(Tag $tag): Response
+    {
+        $this->tagRepository->remove($tag, true);
+        $this->addFlash('sucess', 'Tag was successfully deleted!');
+        return $this->redirectToRoute('tag_index');
     }
 }

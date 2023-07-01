@@ -58,7 +58,7 @@
 						<hr>
 						<div class="row">
 							<div class="col-6">
-								<a href="{{ path('post_show', {'slug' : post.slug}) }}" class="btn btn-danger btn-block w-100">Cancel</a>
+								<a href="{{ path('post_show', {'slug' : post.slug}) }}" class="btn btn-danger w-100">Cancel</a>
 							</div>
 							<div class="col-6">
 								{{ form_row(post_form.submit, {'attr' : {'class' : 'btn btn-success w-100'}, 'label' : 'Save Changes'}) }}

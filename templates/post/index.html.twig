@@ -11,7 +11,7 @@
 				<h1>Your Posts</h1>
 			</div>
 			<div class="col-md-2">
-				<a href="{{ path('post_create') }}" class="btn btn-lg btn-block btn-primary btn-h1-spacing">Create New Post</a>
+				<a href="{{ path('post_create') }}" class="btn btn-lg w-100 btn-primary btn-h1-spacing">Create New Post</a>
 			</div>
 			<div class="col-md-12">
 				<hr>
@@ -40,8 +40,8 @@
 								</td>
 								<td>{{ post.createdAt|ago }}</td>
 								<td>
-									<a href="{{ path('post_show', {'slug' : post.slug}) }}" class="btn btn-default">View</a>
-									<a href="{{ path('post_edit', {'slug' : post.slug}) }}" class="btn btn-default">Edit</a>
+									<a href="{{ path('post_show', {'slug' : post.slug}) }}" class="btn btn-outline-dark">View</a>
+									<a href="{{ path('post_edit', {'slug' : post.slug}) }}" class="btn btn-outline-dark">Edit</a>
 								</td>
 							</tr>
 

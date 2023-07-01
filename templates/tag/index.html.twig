@@ -34,7 +34,7 @@
 						{% for tag in tags %}
 							<tr>
 								<th>{{ tag.id }}</th>
-								<td>{{ tag.name }}</td>
+								<td><a href="{{ path('tag_show', {'name' : tag.name}) }}" class="btn">{{ tag.name }}</a></td>
 							</tr>
 						{% endfor %}
 					</tbody>
@@ -51,7 +51,7 @@
 								{{ form_widget(tag_form.name, {'attr' : {'class' : 'form-control'}}) }}
 							</div>
 
-							{{ form_row(tag_form.submit, {'attr' : {'class' : 'btn btn-success'}}) }}
+							{{ form_row(tag_form.submit, {'attr' : {'class' : 'btn btn-primary w-100'}, 'label' : 'Create New Tag'}) }}
 							{{ form_end(tag_form) }}
 						</div>
 					</div>
