@@ -4,10 +4,11 @@ namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class UnlinkPostTagsSubscriber implements EventSubscriberInterface
 {
-    public function onFormPreSetData(FormEvent $event): void
+    public function preSetData(FormEvent $event): void
     {
         $post = $event->getData();
         if (!$post) {
@@ -23,7 +24,7 @@ class UnlinkPostTagsSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'form.pre_set_data' => 'onFormPreSetData',
+            FormEvents::PRE_SET_DATA => 'preSetData',
         ];
     }
 }
