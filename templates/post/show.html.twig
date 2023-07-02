@@ -44,7 +44,7 @@
 								<img src="{{ "https://www.gravatar.com/avatar/" ~ comment.email|trim|lower|md5 ~ "?s=50&d=monsterid" }}" class="author-image">
 								<div class="author-name">
 									<h4>{{ comment.name }}</h4>
-									
+									<p class="author-time">{{ comment.createdAt|ago }}</p>
 								</div>
 							</div>
 
