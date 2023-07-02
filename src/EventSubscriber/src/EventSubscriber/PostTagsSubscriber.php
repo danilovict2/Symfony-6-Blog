@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class UnlinkPostTagsSubscriber implements EventSubscriberInterface
+class PostTagsSubscriber implements EventSubscriberInterface
 {
     public function preSetData(FormEvent $event): void
     {
@@ -14,10 +14,20 @@ class UnlinkPostTagsSubscriber implements EventSubscriberInterface
         if (!$post) {
             return;
         }
-        
+
         $tags = $post->getTags();
         foreach ($tags as $tag) {
             $tag->removePost($post);
+        }
+    }
+
+    public function postSubmit(FormEvent $event): void
+    {
+        $post = $event->getData();
+        $tags = $post->getTags();
+
+        foreach ($tags as $tag) {
+            $tag->addPost($post);
         }
     }
 
@@ -25,6 +35,7 @@ class UnlinkPostTagsSubscriber implements EventSubscriberInterface
     {
         return [
             FormEvents::PRE_SET_DATA => 'preSetData',
+            FormEvents::POST_SUBMIT => 'postSubmit'
         ];
     }
 }
