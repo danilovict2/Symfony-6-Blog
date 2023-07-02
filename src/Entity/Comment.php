@@ -23,8 +23,8 @@ class Comment
     #[ORM\Column(type: Types::TEXT)]
     private ?string $comment = null;
 
-    #[ORM\Column]
-    private ?bool $approved = null;
+    #[ORM\Column(options: ['default' => false])]
+    private bool $approved = false;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
