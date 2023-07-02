@@ -85,11 +85,24 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/{slug}', name: 'post_show')]
-    public function show(string $slug): Response
+    public function show(string $slug, Request $request, CommentRepository $commentRepository): Response
     {
         $post = $this->postRepository->findOneBySlug($slug);
+        
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setPost($post);
+            $commentRepository->save($comment, true);
+
+            return $this->redirectToRoute('post_show', ['slug' => $post->getSlug()]);
+        }
+
         return $this->render('post/show.html.twig', [
             'post' => $post,
+            'comment_form' => $form->createView()
         ]);
     }
 
