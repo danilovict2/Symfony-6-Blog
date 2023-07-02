@@ -22,7 +22,7 @@ class Tag
     #[Assert\NotBlank]
     private ?string $name = null;
 
-    #[ORM\ManyToMany(targetEntity: Post::class, inversedBy: 'tags', orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: Post::class, inversedBy: 'tags')]
     private Collection $posts;
 
     public function __construct()

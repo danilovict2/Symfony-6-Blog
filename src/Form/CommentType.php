@@ -16,7 +16,6 @@ class CommentType extends AbstractType
             ->add('email')
             ->add('comment')
             ->add('approved')
-            ->add('post')
         ;
     }
 

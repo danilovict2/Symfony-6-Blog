@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Post;
+use App\Form\CommentType;
 use App\Form\PostType;
+use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
@@ -55,7 +58,6 @@ class PostController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             foreach ($form->get('tags')->getData() as $tag) {
-                $post->addTag($tag);
                 $tag->addPost($post);
             }
 
@@ -87,7 +89,7 @@ class PostController extends AbstractController
     {
         $post = $this->postRepository->findOneBySlug($slug);
         return $this->render('post/show.html.twig', [
-            'post' => $post
+            'post' => $post,
         ]);
     }
 

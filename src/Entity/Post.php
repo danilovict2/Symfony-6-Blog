@@ -41,7 +41,7 @@ class Post
     #[ORM\ManyToOne(inversedBy: 'posts')]
     private ?Category $category = null;
 
-    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'posts', orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'posts')]
     private Collection $tags;
 
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, orphanRemoval: true)]

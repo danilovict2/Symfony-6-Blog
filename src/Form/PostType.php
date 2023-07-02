@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Category;
 use App\Entity\Post;
 use App\Entity\Tag;
+use App\EventSubscriber\UnlinkPostTagsSubscriber;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -32,10 +33,11 @@ class PostType extends AbstractType
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
                 'multiple' => true,
-                'required' => false
+                'required' => false,
             ])
             ->add('submit', SubmitType::class)
         ;
+        $builder->addEventSubscriber(new UnlinkPostTagsSubscriber());
     }
 
     public function configureOptions(OptionsResolver $resolver): void
