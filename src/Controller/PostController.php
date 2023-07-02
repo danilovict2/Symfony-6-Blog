@@ -95,7 +95,9 @@ class PostController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setPost($post);
+
             $commentRepository->save($comment, true);
+            $this->addFlash('success', 'Comment was added!');
 
             return $this->redirectToRoute('post_show', ['slug' => $post->getSlug()]);
         }

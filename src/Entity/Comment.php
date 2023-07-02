@@ -30,6 +30,11 @@ class Comment
     #[ORM\JoinColumn(nullable: false)]
     private ?Post $post = null;
 
+    public function __toString()
+    {
+        return $this->comment;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
