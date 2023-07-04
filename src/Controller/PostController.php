@@ -22,7 +22,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/posts', name: 'post_index')]
-    #[IsGranted("ROLE_CREATOR")]
+    #[IsGranted("ROLE_ADMIN")]
     public function index(Request $request): Response
     {
         $offset = max(0, $request->query->getInt('offset', 0));
@@ -36,7 +36,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/create', name: 'post_create')]
-    #[IsGranted("ROLE_CREATOR")]
+    #[IsGranted("ROLE_ADMIN")]
     public function new(Request $request): Response
     {
         $post = new Post();
@@ -74,7 +74,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/{slug}/edit', name: 'post_edit')]
-    #[IsGranted("ROLE_CREATOR")]
+    #[IsGranted("ROLE_ADMIN")]
     public function edit(string $slug, Request $request): Response
     {
         $post = $this->postRepository->findOneBySlug($slug);
@@ -105,7 +105,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/{slug}/delete', name: 'post_delete', methods: ["POST"])]
-    #[IsGranted("ROLE_CREATOR")]
+    #[IsGranted("ROLE_ADMIN")]
     public function delete(string $slug): Response
     {
         $post = $this->postRepository->findOneBySlug($slug);

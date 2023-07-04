@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted("ROLE_USER")]
+#[IsGranted("ROLE_ADMIN")]
 class CategoryController extends AbstractController
 {
     #[Route('/categories', name: 'category_index')]
