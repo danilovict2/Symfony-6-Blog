@@ -39,7 +39,7 @@
 
 				<div class="form-group mb-3">
 					{{ form_label(post_form.body) }}
-					{{ form_widget(post_form.body, {'attr' : {'class' : 'form-control'}}) }}
+					{{ form_widget(post_form.body, {'attr' : {'class' : 'form-control tinymce'}}) }}
 				</div>
 			</div>
 
@@ -76,4 +76,5 @@
 {% block javascripts %}
 	{{ parent() }}
 	<script src="{{ asset('js/select2.js') }}"></script>
+	<script src="{{ asset('js/tinymce.js') }}"></script>
 {% endblock %}
