@@ -23,6 +23,7 @@ class PostType extends AbstractType
             ])
             ->add('body', TextareaType::class, [
                 'error_bubbling' => true,
+                'purify_html' => true
             ])
             ->add('slug', null, [
                 'error_bubbling' => true,
