@@ -8,11 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[UniqueEntity('slug')]
+#[UniqueEntity('slug', message: "Slug must be unique")]
 class Post
 {
     #[ORM\Id]
@@ -21,11 +21,11 @@ class Post
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[NotBlank]
+    #[Assert\NotBlank(message: "Title is required!")]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[NotBlank]
+    #[Assert\NotBlank(message: "Body is required!")]
     private ?string $body = null;
 
     #[ORM\Column]
@@ -35,9 +35,11 @@ class Post
     private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank(message: "Slug is required!")]
     private ?string $slug = null;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
+    #[Assert\NotBlank(messsage: "You must select a category!")]
     private ?Category $category = null;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'posts')]

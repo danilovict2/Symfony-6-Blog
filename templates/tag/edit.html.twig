@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block body %}
+	{% if form_errors(tag_form) %}
+			<div class="alert alert-danger" role="alert">
+				<strong>Errors:</strong>
+				{{ form_errors(tag_form) }}
+			</div>
+	{% endif %}
 	<div class="container">
 		<div class="row d-flex flex-column justify-content-center align-items-center">
 			<div class="col-md-6">

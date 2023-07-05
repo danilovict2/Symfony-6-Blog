@@ -19,7 +19,7 @@ class Tag
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique: true)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: "Name is required!")]
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Post::class, inversedBy: 'tags')]
