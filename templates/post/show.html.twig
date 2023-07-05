@@ -24,7 +24,9 @@
 					{{ post.category }}</p>
 				<div class="tags">
 					{% for tag in post.tags %}
-						<a href="{{ path('tag_show', {'name' : tag}) }}"><span class="badge bg-secondary">{{ tag }}</span></a>
+						<a href="{{ path('tag_show', {'name' : tag}) }}">
+							<span class="badge bg-secondary">{{ tag }}</span>
+						</a>
 					{% endfor %}
 				</div>
 			</div>
@@ -54,11 +56,15 @@
 							<div class="actions position-absolute top-0 end-0">
 								<div class="d-flex">
 									{% if app.user == comment.poster %}
-										<a href="{{ path('comment_edit', {'id' : comment.id}) }}" class="me-2 btn btn-primary btn-sm"><i class="bi bi-pencil-fill"></i></a>
+										<a href="{{ path('comment_edit', {'id' : comment.id}) }}" class="me-2 btn btn-primary btn-sm">
+											<i class="bi bi-pencil-fill"></i>
+										</a>
 									{% endif %}
 									{% if is_granted("ROLE_ADMIN") or app.user == comment.poster %}
 										<form action="{{ path('comment_delete', {'id' : comment.id}) }}" method="POST">
-											<button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this comment?')"><i class="bi bi-trash"></i></button>
+											<button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this comment?')">
+												<i class="bi bi-trash"></i>
+											</button>
 										</form>
 									{% endif %}
 								</div>
@@ -86,45 +92,47 @@
 
 						{{ form_end(comment_form) }}
 					</div>
-				</div>	
+				</div>
 			{% endif %}
-			<div class="col-md-4 mt-3">
-				<div class="card position-absolute top-0 end-0 w-25" style="background-color: lightgray;">
-					<div class="card-body">
-						<dl>
-							<dt>Category:</dt>
-							<dd>{{ post.category }}</dd>
-						</dl>
+			{% if is_granted("ROLE_ADMIN") %}
+				<div class="col-md-4 mt-3">
+					<div class="card position-absolute top-0 end-0 w-25" style="background-color: lightgray;">
+						<div class="card-body">
+							<dl>
+								<dt>Category:</dt>
+								<dd>{{ post.category }}</dd>
+							</dl>
 
-						<dl>
-							<dt>Created:</dt>
-							<dd>{{ post.createdAt|ago }}</dd>
-						</dl>
+							<dl>
+								<dt>Created:</dt>
+								<dd>{{ post.createdAt|ago }}</dd>
+							</dl>
 
-						<dl>
-							<dt>Last Updated:</dt>
-							<dd>{{ post.updatedAt|ago }}</dd>
-						</dl>
-						<hr>
-						<div class="row">
-							<div class="col-6">
-								<a href="{{ path('post_edit', {'slug' : post.slug}) }}" class="btn btn-primary w-100">Edit</a>
+							<dl>
+								<dt>Last Updated:</dt>
+								<dd>{{ post.updatedAt|ago }}</dd>
+							</dl>
+							<hr>
+							<div class="row">
+								<div class="col-6">
+									<a href="{{ path('post_edit', {'slug' : post.slug}) }}" class="btn btn-primary w-100">Edit</a>
+								</div>
+								<div class="col-6">
+									<form action="{{ path('post_delete', {'slug' : post.slug}) }}" method="POST">
+										<input type="submit" value="Delete" class="btn btn-danger w-100" onclick="return confirm('Are you sure you want to delete this post?')"/>
+									</form>
+
+								</div>
 							</div>
-							<div class="col-6">
-								<form action="{{ path('post_delete', {'slug' : post.slug}) }}" method="POST">
-									<input type="submit" value="Delete" class="btn btn-danger w-100" onclick="return confirm('Are you sure you want to delete this post?')"/>
-								</form>
-
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-12">
-								<a href="{{ path('post_index', {'offset' : 0}) }}" class="btn btn-light w-100 btn-h1-spacing">See all posts</a>
+							<div class="row">
+								<div class="col-md-12">
+									<a href="{{ path('post_index', {'offset' : 0}) }}" class="btn btn-light w-100 btn-h1-spacing">See all posts</a>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			{% endif %}
 		</div>
 	</div>
 
