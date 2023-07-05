@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted("ROLE_USER")]
 class TagController extends AbstractController
 {
     public function __construct(private TagRepository $tagRepository)
@@ -19,6 +18,7 @@ class TagController extends AbstractController
     }
 
     #[Route('/tags', name: 'tag_index')]
+    #[IsGranted("ROLE_ADMIN")]
     public function index(Request $request): Response
     {
         $tag = new Tag();
@@ -49,6 +49,7 @@ class TagController extends AbstractController
     }
 
     #[Route('/tag/{id}/edit', name: 'tag_edit')]
+    #[IsGranted("ROLE_ADMIN")]
     public function edit(Tag $tag, Request $request): Response
     {
         $form = $this->createForm(TagType::class, $tag);
@@ -67,6 +68,7 @@ class TagController extends AbstractController
     }
 
     #[Route('/tag/{id}/delete', name: 'tag_delete', methods: ['POST'])]
+    #[IsGranted("ROLE_ADMIN")]
     public function delete(Tag $tag): Response
     {
         $this->tagRepository->remove($tag, true);

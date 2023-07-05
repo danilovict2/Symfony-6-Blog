@@ -34,7 +34,7 @@
 							<tr>
 								<th>{{ post.id }}</th>
 								<td>{{ post.title }}</td>
-								<td>{{ post.body|u.truncate(50)|raw }}
+								<td>{{ post.body|u.truncate(50)|striptags|raw }}
 									{% if post.body|length > 50 %}...
 									{% endif %}
 								</td>
