@@ -96,6 +96,7 @@ class PostController extends AbstractController
         $form = $this->createForm(CommentType::class, $comment);
         $response = $this->handleForm($comment, $request, 'Comment was added!', $form, function () use ($comment, $post) {
             $comment->setPost($post);
+            $comment->setPoster($this->getUser());
         });
 
         return $response ?? $this->render('post/show.html.twig', [

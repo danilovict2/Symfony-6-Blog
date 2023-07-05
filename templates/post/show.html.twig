@@ -41,9 +41,9 @@
 					{% for comment in post.comments %}
 						<div class="comment position-relative">
 							<div class="author-info">
-								<img src="{{ "https://www.gravatar.com/avatar/" ~ comment.email|trim|lower|md5 ~ "?s=50&d=monsterid" }}" class="author-image">
+								<img src="{{ "https://www.gravatar.com/avatar/" ~ comment.poster.email|trim|lower|md5 ~ "?s=50&d=monsterid" }}" class="author-image">
 								<div class="author-name">
-									<h4>{{ comment.name }}</h4>
+									<h4>{{ comment.poster }}</h4>
 									<p class="author-time">{{ comment.createdAt|ago }}</p>
 								</div>
 							</div>
@@ -53,49 +53,41 @@
 							</div>
 							<div class="actions position-absolute top-0 end-0">
 								<div class="d-flex">
-									<a href="{{ path('comment_edit', {'id' : comment.id}) }}" class="me-2 btn btn-primary btn-sm"><i class="bi bi-pencil-fill"></i></a>
-									<form action="{{ path('comment_delete', {'id' : comment.id}) }}" method="POST">
-										<button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this comment?')"><i class="bi bi-trash"></i></button>
-									</form>
+									{% if app.user == comment.poster %}
+										<a href="{{ path('comment_edit', {'id' : comment.id}) }}" class="me-2 btn btn-primary btn-sm"><i class="bi bi-pencil-fill"></i></a>
+									{% endif %}
+									{% if is_granted("ROLE_ADMIN") or app.user == comment.poster %}
+										<form action="{{ path('comment_delete', {'id' : comment.id}) }}" method="POST">
+											<button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this comment?')"><i class="bi bi-trash"></i></button>
+										</form>
+									{% endif %}
 								</div>
 							</div>
 						</div>
 					{% endfor %}
 				</div>
 			</div>
+			{% if is_granted("ROLE_USER") %}
+				<div class="row">
+					<div id="comment-form" class="col-md-8 col-md-offset-2 mt-5">
+						<h1>Leave a Comment</h1>
+						<hr>
+						{{ form_start(comment_form) }}
 
-			<div class="row">
-				<div id="comment-form" class="col-md-8 col-md-offset-2 mt-5">
-					<h1>Leave a Comment</h1>
-					<hr>
-					{{ form_start(comment_form) }}
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group mb-3">
+									{{ form_label(comment_form.comment) }}
+									{{ form_widget(comment_form.comment, {'attr' : {'class' : 'form-control'}}) }}
+								</div>
+								{{ form_row(comment_form.submit, {'attr' : {'class' : 'btn btn-success w-100 mt-3'}}) }}
+							</div>
+						</div>
 
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group mb-3">
-								{{ form_label(comment_form.name) }}
-								{{ form_widget(comment_form.name, {'attr' : {'class' : 'form-control'}}) }}
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group mb-3">
-								{{ form_label(comment_form.email) }}
-								{{ form_widget(comment_form.email, {'attr' : {'class' : 'form-control'}}) }}
-							</div>
-						</div>
-						<div class="col-md-12">
-							<div class="form-group mb-3">
-								{{ form_label(comment_form.comment) }}
-								{{ form_widget(comment_form.comment, {'attr' : {'class' : 'form-control'}}) }}
-							</div>
-							{{ form_row(comment_form.submit, {'attr' : {'class' : 'btn btn-success w-100 mt-3'}}) }}
-						</div>
+						{{ form_end(comment_form) }}
 					</div>
-
-					{{ form_end(comment_form) }}
-				</div>
-			</div>
-
+				</div>	
+			{% endif %}
 			<div class="col-md-4 mt-3">
 				<div class="card position-absolute top-0 end-0 w-25" style="background-color: lightgray;">
 					<div class="card-body">
