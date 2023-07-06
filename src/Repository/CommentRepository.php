@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
+use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,6 +20,20 @@ class CommentRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Comment::class);
+    }
+
+    public function getPostComments(Post $post): mixed
+    {
+        $query = $this->createQueryBuilder('c')
+            ->andWhere('c.post = :post')
+            ->andWhere('c.approved = :approved')
+            ->setParameters([
+                'post' => $post,
+                'approved' => true
+            ])
+        ;
+
+        return $query->getQuery()->execute();
     }
 
     public function save(Comment $entity, bool $flush = false): void

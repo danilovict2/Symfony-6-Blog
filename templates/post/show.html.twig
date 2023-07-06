@@ -42,10 +42,10 @@
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-fill" viewbox="0 0 16 16">
 							<path d="M2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
 						</svg>
-						{{ post.comments|length }}
+						{{ comments|length }}
 						Comments
 					</h3>
-					{% for comment in post.comments %}
+					{% for comment in comments %}
 						<div class="comment position-relative">
 							<div class="author-info">
 								<img src="{{ "https://www.gravatar.com/avatar/" ~ comment.poster.email|trim|lower|md5 ~ "?s=50&d=monsterid" }}" class="author-image">

@@ -6,19 +6,25 @@ use App\Entity\Comment;
 use App\Entity\Post;
 use App\Form\CommentType;
 use App\Form\PostType;
+use App\Message\CommentMessage;
+use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class PostController extends AbstractController
 {
-    public function __construct(private PostRepository $postRepository, private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private PostRepository $postRepository,
+        private EntityManagerInterface $entityManager,
+        private MessageBusInterface $bus
+    ) {
     }
 
     #[Route('/posts', name: 'post_index')]
@@ -41,33 +47,26 @@ class PostController extends AbstractController
     {
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
-        $response = $this->handleForm($post, $request, 'The blog post was successfully saved!', $form);
+        $response = $this->handlePostForm($post, $request, 'The blog post was successfully saved!', $form);
 
         return $response ?? $this->render('post/create.html.twig', [
             'post_form' => $form->createView(),
         ]);
     }
 
-    private function handleForm(
-        mixed $entity,
+    private function handlePostForm(
+        Post $post,
         Request $request,
         string $flash,
-        Form $form,
-        \Closure $extraFunctionality = null
+        Form $form
     ): ?Response {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($extraFunctionality) {
-                $extraFunctionality();
-            }
-
-            $this->entityManager->persist($entity);
-            $this->entityManager->flush();
-
+            $this->postRepository->save($post, true);
             $this->addFlash('sucess', $flash);
-            $slug = $entity instanceof Post ? $entity->getSlug() : $entity->getPost()->getSlug();
-            return $this->redirectToRoute('post_show', ['slug' => $slug]);
+
+            return $this->redirectToRoute('post_show', ['slug' => $post->getSlug()]);
         }
 
         return null;
@@ -79,7 +78,7 @@ class PostController extends AbstractController
     {
         $post = $this->postRepository->findOneBySlug($slug);
         $form = $this->createForm(PostType::class, $post);
-        $response = $this->handleForm($post, $request, 'The blog post was successfully updated!', $form);
+        $response = $this->handlePostForm($post, $request, 'The blog post was successfully updated!', $form);
 
         return $response ?? $this->render('post/edit.html.twig', [
             'post_form' => $form->createView(),
@@ -88,21 +87,43 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/{slug}', name: 'post_show')]
-    public function show(string $slug, Request $request): Response
+    public function show(string $slug, Request $request, CommentRepository $commentRepository): Response
     {
         $post = $this->postRepository->findOneBySlug($slug);
+        $postComments = $commentRepository->getPostComments($post);
 
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
-        $response = $this->handleForm($comment, $request, 'Comment was added!', $form, function () use ($comment, $post) {
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
             $comment->setPost($post);
             $comment->setPoster($this->getUser());
-        });
 
-        return $response ?? $this->render('post/show.html.twig', [
+            $commentRepository->save($comment, true);
+            $this->addFlash('success', 'Comment was added, after review it will be posted!');
+
+            $this->dispatchCommentMessage($comment, $request);
+
+            return $this->redirectToRoute('post_show', ['slug' => $post->getSlug()]);
+        }
+
+        return $this->render('post/show.html.twig', [
             'post' => $post,
+            'comments' => $postComments,
             'comment_form' => $form->createView()
         ]);
+    }
+
+    private function dispatchCommentMessage(Comment $comment, Request $request): void
+    {
+        $context = [
+            'user_ip' => $request->getClientIp(),
+            'user_agent' => $request->headers->get('user-agent'),
+            'referrer' => $request->headers->get('referer'),
+            'permalink' => $request->getUri(),
+        ];
+        $this->bus->dispatch(new CommentMessage($comment->getId(), $context));
     }
 
     #[Route('/post/{slug}/delete', name: 'post_delete', methods: ["POST"])]

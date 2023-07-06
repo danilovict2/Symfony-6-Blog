@@ -51,4 +51,19 @@ class CommentController extends AbstractController
 
         return $this->redirectToRoute('post_show', ['slug' => $slug]);
     }
+
+    #[Route('/comment/review/{id}', name: 'review_comment')]
+    #[IsGranted("ROLE_ADMIN")]
+    public function reviewComment(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
+    {
+        $approved = !$request->query->get('reject');
+
+        $comment->setApproved($approved);
+        $entityManager->persist($comment);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Comment reviewed, thank you!');
+
+        return $this->redirectToRoute("post_show", ['slug' => $comment->getPost()->getSlug()]);
+    }
 }
