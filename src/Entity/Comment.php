@@ -20,6 +20,9 @@ class Comment
     #[Assert\NotBlank(message: "Comment is required!")]
     private ?string $comment = null;
 
+    #[ORM\Column(options: ['default' => false])]
+    private bool $approved = false;
+
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Post $post = null;
@@ -49,6 +52,18 @@ class Comment
     public function setComment(string $comment): static
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function isApproved(): ?bool
+    {
+        return $this->approved;
+    }
+
+    public function setApproved(bool $approved): static
+    {
+        $this->approved = $approved;
 
         return $this;
     }

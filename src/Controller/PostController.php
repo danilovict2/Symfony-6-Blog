@@ -64,7 +64,7 @@ class PostController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->postRepository->save($post, true);
-            $this->addFlash('sucess', $flash);
+            $this->addFlash('success', $flash);
 
             return $this->redirectToRoute('post_show', ['slug' => $post->getSlug()]);
         }

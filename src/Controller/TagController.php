@@ -27,7 +27,7 @@ class TagController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->tagRepository->save($tag, true);
-            $this->addFlash('sucess', 'New Tag has been created!');
+            $this->addFlash('success', 'New Tag has been created!');
 
             return $this->redirectToRoute('tag_index');
         }
@@ -57,7 +57,7 @@ class TagController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->tagRepository->save($tag, true);
-            $this->addFlash('sucess', 'Tag was successfully updated!');
+            $this->addFlash('success', 'Tag was successfully updated!');
 
             return $this->redirectToRoute('tag_show', ['name' => $tag->getName()]);
         }
@@ -72,7 +72,7 @@ class TagController extends AbstractController
     public function delete(Tag $tag): Response
     {
         $this->tagRepository->remove($tag, true);
-        $this->addFlash('sucess', 'Tag was successfully deleted!');
+        $this->addFlash('success', 'Tag was successfully deleted!');
         return $this->redirectToRoute('tag_index');
     }
 }
