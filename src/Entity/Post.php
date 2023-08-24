@@ -39,7 +39,7 @@ class Post
     private ?string $slug = null;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
-    #[Assert\NotBlank(messsage: "You must select a category!")]
+    #[Assert\NotBlank(message: "You must select a category!")]
     private ?Category $category = null;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'posts')]
